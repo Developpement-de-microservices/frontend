@@ -9,6 +9,7 @@ WORKDIR /app
 
 COPY /app/requirements.txt .
 COPY app/templates ./templates
+COPY app/static ./static
 
 
 
