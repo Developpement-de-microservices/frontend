@@ -30,9 +30,8 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    // --- LOGIN ---
-    const loginForm = document.getElementById("loginForm");
-    loginForm.addEventListener("submit", async (e) => {
+    // LOGIN
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const data = {
@@ -51,9 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.reload();
     });
 
-    // --- VERIFY TOKEN ---
-    const verifyForm = document.getElementById("verifyForm");
-    verifyForm.addEventListener("submit", async (e) => {
+    // VERIFY
+    document.getElementById("verifyForm").addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const data = {
