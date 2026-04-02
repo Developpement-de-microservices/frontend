@@ -4,7 +4,7 @@
 <h2>Auth</h2>
 
 <h3>Login</h3>
-<form method="post" action="/call/auth/login">
+<form id="loginForm">
     <label>Username</label><br>
     <input name="username" value="admin"><br>
 
@@ -15,7 +15,7 @@
 </form>
 
 <h3>Verify Token</h3>
-<form method="post" action="/call/auth/verify">
+<form id="verifyForm">
     <label>Token</label><br>
     <input name="token"><br>
 
@@ -26,4 +26,46 @@
 <h3>Réponse API</h3>
 <pre>{{ response | tojson(indent=2) }}</pre>
 {% endif %}
+
+<script>
+// --- LOGIN ---
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const data = {
+        username: e.target.username.value,
+        password: e.target.password.value
+    };
+
+    const res = await fetch("/call/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    const json = await res.json();
+    console.log(json);
+    window.location.reload();
+});
+
+// --- VERIFY TOKEN ---
+document.getElementById("verifyForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const data = {
+        token: e.target.token.value
+    };
+
+    const res = await fetch("/call/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    const json = await res.json();
+    console.log(json);
+    window.location.reload();
+});
+</script>
+
 {% endblock %}
