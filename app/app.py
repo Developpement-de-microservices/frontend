@@ -3,6 +3,7 @@ from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+app.secret_key = "dev-secret"
 CORS(app)
 
 API = "http://proxy:8080"
