@@ -8,6 +8,9 @@ RUN apk add --no-cache curl
 WORKDIR /app
 
 COPY /app/requirements.txt .
+COPY app/templates ./templates
+
+
 
 RUN pip install --no-cache-dir -r requirements.txt
 
