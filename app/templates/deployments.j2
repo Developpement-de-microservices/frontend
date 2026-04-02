@@ -1,0 +1,23 @@
+{% extends "base.j2" %}
+
+{% block content %}
+<h2>Deployments</h2>
+
+<h3>Liste</h3>
+<form method="get" action="/call/deployments/list">
+    <button type="submit">GET /deployments</button>
+</form>
+
+<h3>Créer un déploiement</h3>
+<form method="post" action="/call/deployments/create">
+    <input name="applicationId" placeholder="applicationId"><br>
+    <input name="versionId" placeholder="versionId"><br>
+    <input name="environmentId" placeholder="environmentId"><br>
+    <button type="submit">POST /deployments</button>
+</form>
+
+{% if response %}
+<h3>Réponse API</h3>
+<pre>{{ response | tojson(indent=2) }}</pre>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.j2" %}
+
+{% block content %}
+<h2>Applications</h2>
+
+<h3>Liste des applications</h3>
+<form method="get" action="/call/apps/list">
+    <button type="submit">GET /apps</button>
+</form>
+
+<h3>Créer une application</h3>
+<form method="post" action="/call/apps/create">
+    <input name="name" placeholder="Nom"><br>
+    <input name="description" placeholder="Description"><br>
+    <input name="repositoryUrl" placeholder="Repo URL"><br>
+    <button type="submit">POST /apps</button>
+</form>
+
+<h3>Voir une application</h3>
+<form method="get" action="/call/apps/get">
+    <input name="app_id" placeholder="ID"><br>
+    <button type="submit">GET /apps/{id}</button>
+</form>
+
+{% if response %}
+<h3>Réponse API</h3>
+<pre>{{ response | tojson(indent=2) }}</pre>
+{% endif %}
+{% endblock %}

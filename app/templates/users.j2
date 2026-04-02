@@ -1,0 +1,33 @@
+{% extends "base.j2" %}
+
+{% block content %}
+<h2>Users</h2>
+
+<h3>Liste des utilisateurs</h3>
+<form method="get" action="/call/users/list">
+    <button type="submit">GET /users</button>
+</form>
+
+<h3>Créer un utilisateur</h3>
+<form method="post" action="/call/users/create">
+    <input name="username" placeholder="username"><br>
+    <input name="email" placeholder="email"><br>
+    <input name="password" placeholder="password"><br>
+    <select name="role">
+        <option>ADMIN</option>
+        <option>USER</option>
+    </select><br>
+    <button type="submit">POST /users</button>
+</form>
+
+<h3>Consulter un utilisateur</h3>
+<form method="get" action="/call/users/get">
+    <input name="userId" placeholder="userId"><br>
+    <button type="submit">GET /users/{id}</button>
+</form>
+
+{% if response %}
+<h3>Réponse API</h3>
+<pre>{{ response | tojson(indent=2) }}</pre>
+{% endif %}
+{% endblock %}

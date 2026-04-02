@@ -1,0 +1,29 @@
+{% extends "base.j2" %}
+
+{% block content %}
+<h2>Auth</h2>
+
+<h3>Login</h3>
+<form method="post" action="/call/auth/login">
+    <label>Username</label><br>
+    <input name="username" value="admin"><br>
+
+    <label>Password</label><br>
+    <input name="password" type="password" value="bonjour"><br>
+
+    <button type="submit">Tester /auth/login</button>
+</form>
+
+<h3>Verify Token</h3>
+<form method="post" action="/call/auth/verify">
+    <label>Token</label><br>
+    <input name="token"><br>
+
+    <button type="submit">Tester /auth/verify</button>
+</form>
+
+{% if response %}
+<h3>Réponse API</h3>
+<pre>{{ response | tojson(indent=2) }}</pre>
+{% endif %}
+{% endblock %}
