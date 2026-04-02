@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-API_BASE = "http://localhost:8080"
+API_BASE = "http://proxy:8080"
 
 @app.route("/")
 def index():
