@@ -1,6 +1,43 @@
-{% extends "base.j2" %}
+from flask import Flask, render_template, request, jsonify
+import requests
 
-{% block content %}
-<h1>Plateforme de test – SAE401</h1>
-<p>Choisissez une catégorie dans le menu pour tester les endpoints.</p>
-{% endblock %}
+app = Flask(__name__)
+
+API_BASE = "http://localhost:8080"
+
+@app.route("/")
+def index():
+    return render_template("index.j2")
+
+@app.route("/proxy", methods=["POST"])
+def proxy():
+    data = request.json
+
+    method = data.get("method")
+    endpoint = data.get("endpoint")
+    token = data.get("token")
+    body = data.get("body")
+
+    headers = {}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    try:
+        response = requests.request(
+            method=method,
+            url=f"{API_BASE}{endpoint}",
+            json=body,
+            headers=headers
+        )
+
+        return jsonify({
+            "status": response.status_code,
+            "data": response.json() if response.content else {}
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
