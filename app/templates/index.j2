@@ -1,43 +1,113 @@
-from flask import Flask, render_template, request, jsonify
-import requests
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>API Tester</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
 
-app = Flask(__name__)
+<h1>🚀 API Tester - SAE401</h1>
 
-API_BASE = "http://proxy:8080"
+<!-- LOGIN -->
+<section>
+    <h2>🔐 Login</h2>
+    <input id="username" placeholder="username" value="admin">
+    <input id="password" type="password" placeholder="password" value="bonjour">
+    <button onclick="login()">Login</button>
+</section>
 
-@app.route("/")
-def index():
-    return render_template("index.j2")
+<hr>
 
-@app.route("/proxy", methods=["POST"])
-def proxy():
-    data = request.json
+<!-- TOKEN -->
+<section>
+    <h3>Token JWT</h3>
+    <textarea id="token" rows="3"></textarea>
+</section>
 
-    method = data.get("method")
-    endpoint = data.get("endpoint")
-    token = data.get("token")
-    body = data.get("body")
+<hr>
 
-    headers = {}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
+<!-- TEST ENDPOINT -->
+<section>
+    <h2>🧪 Tester un endpoint</h2>
 
-    try:
-        response = requests.request(
-            method=method,
-            url=f"{API_BASE}{endpoint}",
-            json=body,
-            headers=headers
-        )
+    <label>Méthode :</label>
+    <select id="method">
+        <option>GET</option>
+        <option>POST</option>
+        <option>PATCH</option>
+        <option>DELETE</option>
+    </select>
 
-        return jsonify({
-            "status": response.status_code,
-            "data": response.json() if response.content else {}
+    <label>Endpoint :</label>
+    <input id="endpoint" value="/users">
+
+    <label>Body JSON :</label>
+    <textarea id="body" rows="6">{}</textarea>
+
+    <button onclick="sendRequest()">Envoyer</button>
+</section>
+
+<hr>
+
+<!-- RESPONSE -->
+<section>
+    <h2>📦 Réponse</h2>
+    <pre id="response"></pre>
+</section>
+
+<script>
+async function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch("/proxy", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            method: "POST",
+            endpoint: "/auth/login",
+            body: { username, password }
         })
+    });
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    const data = await res.json();
+    document.getElementById("response").textContent = JSON.stringify(data, null, 2);
 
+    if (data.data && data.data.accessToken) {
+        document.getElementById("token").value = data.data.accessToken;
+    }
+}
 
-if __name__ == "__main__":
-    app.run(debug=True)
+async function sendRequest() {
+    const method = document.getElementById("method").value;
+    const endpoint = document.getElementById("endpoint").value;
+    const token = document.getElementById("token").value;
+    const bodyText = document.getElementById("body").value;
+
+    let body = {};
+    try {
+        body = JSON.parse(bodyText);
+    } catch {
+        alert("JSON invalide");
+        return;
+    }
+
+    const res = await fetch("/proxy", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            method,
+            endpoint,
+            token,
+            body
+        })
+    });
+
+    const data = await res.json();
+    document.getElementById("response").textContent = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
